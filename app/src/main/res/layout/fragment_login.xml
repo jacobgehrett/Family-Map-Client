@@ -1,0 +1,111 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.LoginFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:rowCount="9"
+    android:columnCount="2" >
+
+    <TextView
+        android:text="@string/server_host"
+        android:id="@+id/serverHostTextView" />
+
+    <EditText
+        android:inputType="text"
+        android:id="@+id/serverHostEditText"
+        android:autofillHints="Server Host"
+        android:hint="@string/server_host"/>
+
+    <TextView
+        android:text="@string/server_port"
+        android:id="@+id/serverPortTextView" />
+
+    <EditText
+        android:inputType="number"
+        android:id="@+id/serverPortEditText"
+        android:autofillHints="Server Port"
+        android:hint="@string/server_port"/>
+
+    <TextView
+        android:text="@string/user_name"
+        android:id="@+id/usernameTextView" />
+
+    <EditText
+        android:inputType="text"
+        android:id="@+id/usernameEditText"
+        android:autofillHints="Username"
+        android:hint="@string/user_name"/>
+
+    <TextView
+        android:text="@string/password"
+        android:id="@+id/passwordTextView" />
+
+    <EditText
+        android:inputType="textPassword"
+        android:id="@+id/passwordEditText"
+        android:autofillHints="Password"
+        android:hint="@string/password"/>
+
+    <TextView
+        android:text="@string/first_name"
+        android:id="@+id/firstNameTextView" />
+
+    <EditText
+        android:inputType="text"
+        android:id="@+id/firstNameEditText"
+        android:autofillHints="First Name"
+        android:hint="@string/first_name"/>
+
+    <TextView
+        android:text="@string/last_name"
+        android:id="@+id/lastNameTextView" />
+
+    <EditText
+        android:inputType="text"
+        android:id="@+id/lastNameEditText"
+        android:autofillHints="Last Name"
+        android:hint="@string/last_name"/>
+
+    <TextView
+        android:text="@string/email"
+        android:id="@+id/emailTextView" />
+
+    <EditText
+        android:inputType="textEmailAddress"
+        android:id="@+id/emailEditText"
+        android:autofillHints="Email"
+        android:hint="@string/email"/>
+
+    <TextView
+        android:text="@string/gender"
+        android:id="@+id/genderTextView" />
+
+    <RadioGroup android:id="@+id/radio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton android:id="@+id/radio_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/male" />
+        <RadioButton android:id="@+id/radio_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/female" />
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_in"
+        android:enabled="false"
+        android:id="@+id/login" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:enabled="false"
+        android:id="@+id/register" />
+
+</GridLayout>
