@@ -15,4 +15,9 @@
     <string name="sign_in">SIGN IN</string>
     <string name="register">REGISTER</string>
     <string name="show_selected">Show Selected</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="mapFragmentMessage">Map Fragment</string>
+    <string name="click_on_a_marker_to_see_event_details">Click on a marker to see event details</string>
+    <string name="search">search</string>
+    <string name="settings">settings</string>
 </resources>

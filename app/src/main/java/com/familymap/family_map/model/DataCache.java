@@ -2,6 +2,12 @@ package com.familymap.family_map.model;
 
 import java.util.*;
 
+import RequestResult.EventIDResult;
+import RequestResult.EventResult;
+import RequestResult.PersonResult;
+import RequestResult.PersonIDResult;
+import RequestResult.Result;
+
 public class DataCache {
 
     private static DataCache instance;
@@ -13,8 +19,6 @@ public class DataCache {
     public static void initialize() { instance = new DataCache(); }
 
     public static void clear() { instance._clear(); }
-
-    public static void startSync() { instance._startSync(); }
 
     public static void endSync() { instance._endSync(); }
 
@@ -66,6 +70,13 @@ public class DataCache {
         return instance._getPersonChildren(p);
     }
 
+    public static void setPeople(PersonIDResult[] r) {
+        instance._setPeople(r);
+    }
+    public static void setEvents(EventIDResult[] r) {
+        instance._setEvents(r);
+    }
+
     private Map<String, Person> people;
     private Map<String, Event> events;
     private Map<String, List<Event>> personEvents;
@@ -101,8 +112,6 @@ public class DataCache {
         maternalAncestors.clear();
         personChildren.clear();
     }
-
-    private void _startSync() { _clear(); }
 
     private void _endSync() {
         _calcPersonEvents();
@@ -161,7 +170,7 @@ public class DataCache {
 
         eventTypeColors.clear();
         for (String eventType : eventTypes) {
-            eventTypeColors.put(eventType, colors[colorIndex]);
+            eventTypeColors.put(eventType.toLowerCase(), colors[colorIndex]);
             colorIndex = ((colorIndex + 1) % colors.length);
         }
     }
@@ -205,6 +214,19 @@ public class DataCache {
         }
     }
 
+    private void _calcMaternalAncestors() {
+        maternalAncestors.clear();
+        _calcMaternalAncestors(user.getMother());
+    }
+
+    private void _calcMaternalAncestors(Person p) {
+        if (p != null) {
+            maternalAncestors.add(p.getPersonId());
+            _calcMaternalAncestors(p.getFather());
+            _calcMaternalAncestors(p.getMother());
+        }
+    }
+
     private Collection<Person> _getAllPeople() {
         return null;
     }
@@ -217,7 +239,7 @@ public class DataCache {
     }
 
     private Collection<Event> _getAllEvents() {
-        return null;
+        return new ArrayList<>(events.values());
     }
 
     private Collection<Event> _getAllFilteredEvents() {
@@ -233,7 +255,7 @@ public class DataCache {
     }
 
     private Map<String, MapColor> _getEventTypeColors() {
-        return null;
+        return eventTypeColors;
     }
 
     private boolean _isPaternalAncestor(Person p) {
@@ -260,10 +282,20 @@ public class DataCache {
         return null;
     }
 
-    private void _calcMaternalAncestors() {
-    }
-
     private void _calcPersonChildren() {
     }
 
+    private void _setPeople(PersonIDResult[] r) {
+        for (PersonIDResult personIDResult : r) {
+            people.put(personIDResult.getPersonID(),
+                    new Person(personIDResult.getFirstName(), personIDResult.getLastName(), null));
+        }
+    }
+
+    private void _setEvents(EventIDResult[] r) {
+        for (EventIDResult eventIDResult : r) {
+            events.put(eventIDResult.getEventID(), new Event(eventIDResult.getEventType(),
+                    eventIDResult.getLatitude(), eventIDResult.getLongitude()));
+        }
+    }
 }

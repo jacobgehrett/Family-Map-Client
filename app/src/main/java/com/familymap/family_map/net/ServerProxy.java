@@ -1,5 +1,6 @@
 package com.familymap.family_map.net;
 
+import com.familymap.family_map.model.DataCache;
 import com.familymap.family_map.model.Person;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,9 +9,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import RequestResult.EventIDResult;
+import RequestResult.EventResult;
 import RequestResult.LoginRequest;
+import RequestResult.PersonEventRequest;
 import RequestResult.PersonIDRequest;
 import RequestResult.PersonIDResult;
+import RequestResult.PersonResult;
 import RequestResult.RegisterRequest;
 import RequestResult.UserResult;
 
@@ -36,8 +42,36 @@ public class ServerProxy {
         jsonStr = EncoDecode.serialize(getUserInfo);
         respData = sendRequest("GET", false, jsonStr, "/person/" + personID, authtoken);
         PersonIDResult userPID = (PersonIDResult) EncoDecode.deserialize(respData, PersonIDResult.class);
-        return new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
-                                                                            + " logged in!");
+        Person user = new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
+                + " logged in!");
+        if (user.getFirstName() != null) {
+            DataCache.clear();
+            DataCache.setUser(user);
+        }
+        PersonEventRequest getPeople = new PersonEventRequest(authtoken);
+        jsonStr = EncoDecode.serialize(getPeople);
+        respData = sendRequest("GET", false, jsonStr, "/person", authtoken);
+        PersonResult people = (PersonResult) EncoDecode.deserialize(respData, PersonResult.class);
+        PersonIDResult[] personas = new PersonIDResult[people.getData().length];
+        for (int j = 0; j < personas.length; ++j) {
+            jsonStr = EncoDecode.serialize(people.getData()[j]);
+            PersonIDResult pID = (PersonIDResult) EncoDecode.deserialize(jsonStr, PersonIDResult.class);
+            personas[j] = pID;
+        }
+        DataCache.setPeople(personas);
+        PersonEventRequest getEvents = new PersonEventRequest(authtoken);
+        jsonStr = EncoDecode.serialize(getEvents);
+        respData = sendRequest("GET", false, jsonStr, "/event", authtoken);
+        EventResult events = (EventResult) EncoDecode.deserialize(respData, EventResult.class);
+        EventIDResult[] eventos = new EventIDResult[events.getData().length];
+        for (int j = 0; j < eventos.length; ++j) {
+            jsonStr = EncoDecode.serialize(events.getData()[j]);
+            EventIDResult eID = (EventIDResult) EncoDecode.deserialize(jsonStr, EventIDResult.class);
+            eventos[j] = eID;
+        }
+        DataCache.setEvents(eventos);
+        DataCache.endSync();
+        return user;
     }
 
     public Person register(RegisterRequest r) {
@@ -53,8 +87,33 @@ public class ServerProxy {
         jsonStr = EncoDecode.serialize(getUserInfo);
         respData = sendRequest("GET", false, jsonStr, "/person/" + personID, authtoken);
         PersonIDResult userPID = (PersonIDResult) EncoDecode.deserialize(respData, PersonIDResult.class);
-        return new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
+        Person user = new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
                 + " registered!");
+        if (user.getFirstName() != null) {
+            DataCache.clear();
+            DataCache.setUser(user);
+        }
+        PersonResult people = (PersonResult) EncoDecode.deserialize(respData, PersonResult.class);
+        PersonIDResult[] personas = new PersonIDResult[people.getData().length];
+        for (int j = 0; j < personas.length; ++j) {
+            jsonStr = EncoDecode.serialize(people.getData()[j]);
+            PersonIDResult pID = (PersonIDResult) EncoDecode.deserialize(jsonStr, PersonIDResult.class);
+            personas[j] = pID;
+        }
+        DataCache.setPeople(personas);
+        PersonEventRequest getEvents = new PersonEventRequest(authtoken);
+        jsonStr = EncoDecode.serialize(getEvents);
+        respData = sendRequest("GET", false, jsonStr, "/event", authtoken);
+        EventResult events = (EventResult) EncoDecode.deserialize(respData, EventResult.class);
+        EventIDResult[] eventos = new EventIDResult[events.getData().length];
+        for (int j = 0; j < eventos.length; ++j) {
+            jsonStr = EncoDecode.serialize(events.getData()[j]);
+            EventIDResult eID = (EventIDResult) EncoDecode.deserialize(jsonStr, EventIDResult.class);
+            eventos[j] = eID;
+        }
+        DataCache.setEvents(eventos);
+        DataCache.endSync();
+        return user;
     }
 
     // The claimRoute method calls the server's "/routes/claim" operation to

@@ -14,12 +14,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import com.familymap.family_map.R;
-import com.familymap.family_map.model.Person;
-
+import com.familymap.family_map.model.DataCache;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import RequestResult.LoginRequest;
@@ -47,6 +46,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -142,7 +142,10 @@ public class LoginFragment extends Fragment {
                     public boolean handleMessage(@NonNull Message msg) {
                         Bundle bundle = msg.getData();
                         String finalMessage = bundle.getString(USER_RESULT);
-                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_LONG).show();
+                        if (DataCache.hasUser()) {
+                            ((MainActivity)getActivity()).loggedIn();
+                        }
+                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 });
@@ -172,7 +175,10 @@ public class LoginFragment extends Fragment {
                     public boolean handleMessage(@NonNull Message msg) {
                         Bundle bundle = msg.getData();
                         String finalMessage = bundle.getString(USER_RESULT);
-                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_LONG).show();
+                        if (DataCache.hasUser()) {
+                            ((MainActivity)getActivity()).loggedIn();
+                        }
+                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 });

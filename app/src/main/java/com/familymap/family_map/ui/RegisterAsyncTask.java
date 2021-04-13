@@ -3,6 +3,8 @@ package com.familymap.family_map.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import com.familymap.family_map.model.DataCache;
 import com.familymap.family_map.model.Person;
 import com.familymap.family_map.net.ServerProxy;
 import RequestResult.RegisterRequest;
