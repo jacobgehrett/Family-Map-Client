@@ -1,6 +1,8 @@
 package com.familymap.family_map.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -42,6 +48,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Event selectedEvent;
     private Map<Marker, Event> markersToEvents;
     private List<Polyline> lines;
+    private Drawable maleIcon;
+    private Drawable femaleIcon;
 
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
@@ -77,14 +85,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         View v = inflater.inflate(R.layout.fragment_map, parent, false);
 
         genderImageView = (ImageView)v.findViewById(R.id.genderImageView);
-        setEventInfoClickListener(genderImageView);
+        genderImageView.setOnClickListener(setEventInfoClickListener);
         setGenderIcon(null);
 
         personNameTextView = (TextView)v.findViewById(R.id.personNameTextView);
-        setEventInfoClickListener(personNameTextView);
+        personNameTextView.setOnClickListener(setEventInfoClickListener);
 
         eventDetailsTextView = (TextView)v.findViewById(R.id.eventDetailsTextView);
-        setEventInfoClickListener(eventDetailsTextView);
+        eventDetailsTextView.setOnClickListener(setEventInfoClickListener);
 
         markersToEvents = new HashMap<>();
         selectedEvent = null;
@@ -129,6 +137,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 }*/this);
 
+        Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_map_marker).
+                colorRes(R.color.teal_200).sizeDp(40);
+        maleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).
+                colorRes(R.color.blue).sizeDp(40);
+        femaleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).
+                colorRes(R.color.pink).sizeDp(40);
+        genderImageView.setImageDrawable(genderIcon);
+        personNameTextView.setText(R.string.default_string);
         return v;
     }
 
@@ -136,9 +152,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void setGenderIcon(Object o) {
-    }
-
-    private void setEventInfoClickListener(View genderImageView) {
     }
 
     /*public void onSettingsChanges(settingsResult result) {
@@ -153,14 +166,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     private GoogleMap.OnMarkerClickListener markerClickListener =
             new GoogleMap.OnMarkerClickListener() {
+        @SuppressLint("SetTextI18n")
         @Override
         public boolean onMarkerClick(Marker marker) {
             selectedEvent = markersToEvents.get(marker);
             populateMap(false);
             Event e = (Event)marker.getTag();
+            selectedEvent = e;
             map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(e.getLatitude(),
                     e.getLongitude())));
-            System.out.println(e.getType());
+            if (e.getGender().equals("m")) {
+                genderImageView.setImageDrawable(maleIcon);
+            }
+            else {
+                genderImageView.setImageDrawable(femaleIcon);
+            }
+
+            personNameTextView.setText(e.getFirstName() + " " + e.getLastName());
+            eventDetailsTextView.setText(selectedEvent.getType().toUpperCase() + ": " + selectedEvent.getCity() + ", " +
+                    selectedEvent.getCountry() + " (" + selectedEvent.getDate() + ")");
+
             return true;
         }
     };
@@ -181,17 +206,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setOnMapLoadedCallback(this);
-        for (Event e : DataCache.getAllEvents()) {
+        for (Event e : DataCache.getAllFilteredEvents()) {
 
             Marker newEvent = map.addMarker(new MarkerOptions().position(new LatLng(e.getLatitude(),
-                    e.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(DataCache.getEventTypeColors().get(e.getType()).getColor())));
+                    e.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(DataCache.getEventTypeColors().get(e.getType().toLowerCase()).getColor())));
             newEvent.setTag(e);
         }
         map.setOnMarkerClickListener(markerClickListener);
+        if (selectedEvent != null) {
+            LatLng eventPosition = new LatLng(selectedEvent.getLatitude(),
+                    selectedEvent.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
+            if (selectedEvent.getGender().equals("m")) {
+                genderImageView.setImageDrawable(maleIcon);
+            }
+            else {
+                genderImageView.setImageDrawable(femaleIcon);
+            }
+
+            personNameTextView.setText(selectedEvent.getFirstName() + " " + selectedEvent.getLastName());
+            eventDetailsTextView.setText(selectedEvent.getType().toUpperCase() + ": " + selectedEvent.getCity() + ", " +
+                    selectedEvent.getCountry() + " (" + selectedEvent.getDate() + ")");
+        }
         //map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 

@@ -60,6 +60,10 @@ public class DataCache {
 
     public static Settings getSettings() { return instance._getSettings(); }
 
+    public static void setSettings(boolean lifeStory, boolean familyTree, boolean spouse, boolean father, boolean mother, boolean male, boolean female) {
+        instance._setSettings(lifeStory, familyTree, spouse, father, mother, male, female);
+    }
+
     public static List<Event> getPersonEvents(Person p) { return instance._getPersonEvents(p); }
 
     public static List<Event> getPersonFilteredEvents(Person p) {
@@ -228,11 +232,11 @@ public class DataCache {
     }
 
     private Collection<Person> _getAllPeople() {
-        return null;
+        return new ArrayList<>(people.values());
     }
 
     private Person _getPersonById(String id) {
-        return null;
+        return people.get(id);
     }
 
     private void _addEvent(Event e) {
@@ -243,11 +247,43 @@ public class DataCache {
     }
 
     private Collection<Event> _getAllFilteredEvents() {
-        return null;
+        ArrayList<Event> filtered = (ArrayList<Event>) getAllEvents();
+
+        if (!this.settings.isFather()) {
+            _calcPaternalAncestors();
+            for (Event e : filtered) {
+                if (isPaternalAncestor(e.getPerson())) {
+                    filtered.remove(e);
+                }
+            }
+        }
+        if (!this.settings.isMother()) {
+            _calcMaternalAncestors();
+            for (Event e : filtered) {
+                if (isMaternalAncestor(e.getPerson())) {
+                    filtered.remove(e);
+                }
+            }
+        }
+        if (!this.settings.isMale()) {
+            for (Event e : filtered) {
+                if (e.getGender().equals("m")) {
+                    filtered.remove(e);
+                }
+            }
+        }
+        if (!this.settings.isFemale()) {
+            for (Event e : filtered) {
+                if (e.getGender().equals("f")) {
+                    filtered.remove(e);
+                }
+            }
+        }
+        return filtered;
     }
 
     private Event _getEventById(String id) {
-        return null;
+        return events.get(id);
     }
 
     private List<String> _getEventTypes() {
@@ -259,19 +295,67 @@ public class DataCache {
     }
 
     private boolean _isPaternalAncestor(Person p) {
-        return false;
+        return paternalAncestors.contains(p.getPersonId());
     }
 
     private boolean _isMaternalAncestor(Person p) {
-        return false;
+        return maternalAncestors.contains(p.getPersonId());
+    }
+
+    private void _setSettings(boolean lifeStory, boolean familyTree, boolean spouse, boolean father, boolean mother, boolean male, boolean female) {
+        this.settings.setLifeStory(lifeStory);
+        this.settings.setFamilyTree(familyTree);
+        this.settings.setSpouse(spouse);
+        this.settings.setFather(father);
+        this.settings.setMother(mother);
+        this.settings.setMale(male);
+        this.settings.setFemale(female);
     }
 
     private Settings _getSettings() {
-        return null;
+        return this.settings;
     }
 
     private List<Event> _getPersonEvents(Person p) {
-        return null;
+        List<Event> personEvents = new ArrayList<>();
+        for (Event e : this._getAllFilteredEvents()) {
+            if (e.getPerson().getPersonId().equals(p.getPersonId())) {
+                for (Event pEvent : personEvents) {
+                    if (e.getDate() < pEvent.getDate()) {
+                        personEvents.add(personEvents.indexOf(pEvent), e);
+                        break;
+                    }
+                    if (e.getDate() == pEvent.getDate()) {
+                        if (e.getType().length() < pEvent.getType().length()) {
+                            for (int i = 0; i < e.getType().length(); ++i) {
+                                if (e.getType().toLowerCase().charAt(i) <
+                                        pEvent.getType().toLowerCase().charAt(i)) {
+                                    personEvents.add(personEvents.indexOf(pEvent), e);
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            for (int i = 0; i < pEvent.getType().length(); ++i) {
+                                if (e.getType().toLowerCase().charAt(i) <
+                                        pEvent.getType().toLowerCase().charAt(i)) {
+                                    personEvents.add(personEvents.indexOf(pEvent), e);
+                                    break;
+                                }
+                            }
+                        }
+                        if (!personEvents.contains(e)) {
+                            personEvents.add(e);
+                        }
+                        break;
+                    }
+                }
+                if (personEvents.size() == 0) {
+                    personEvents.add(e);
+                }
+            }
+        }
+        return personEvents;
     }
 
     private List<Event> _getPersonFilteredEvents(Person p) {
@@ -279,7 +363,24 @@ public class DataCache {
     }
 
     private List<Person> _getPersonChildren(Person p) {
-        return null;
+        ArrayList<Person> personChildren = new ArrayList<>();
+        if (p.getGender().equals("m")) {
+            for (Person person : this._getAllPeople()) {
+                if (person.getFather() == p) {
+                    person.setRelation("Child");
+                    personChildren.add(person);
+                }
+            }
+        }
+        else {
+            for (Person person : this._getAllPeople()) {
+                if (person.getMother() == p) {
+                    person.setRelation("Child");
+                    personChildren.add(person);
+                }
+            }
+        }
+        return personChildren;
     }
 
     private void _calcPersonChildren() {
@@ -288,14 +389,25 @@ public class DataCache {
     private void _setPeople(PersonIDResult[] r) {
         for (PersonIDResult personIDResult : r) {
             people.put(personIDResult.getPersonID(),
-                    new Person(personIDResult.getFirstName(), personIDResult.getLastName(), null));
+                    new Person(personIDResult.getFirstName(), personIDResult.getLastName(),
+                            null, personIDResult.getGender(), personIDResult.getPersonID(),
+                            personIDResult.getMotherID(), personIDResult.getFatherID(),
+                            personIDResult.getSpouseID()));
         }
     }
 
     private void _setEvents(EventIDResult[] r) {
         for (EventIDResult eventIDResult : r) {
             events.put(eventIDResult.getEventID(), new Event(eventIDResult.getEventType(),
-                    eventIDResult.getLatitude(), eventIDResult.getLongitude()));
+                    eventIDResult.getLatitude(), eventIDResult.getLongitude(),
+                    eventIDResult.getYear(), eventIDResult.getCity(), eventIDResult.getCountry(),
+                    eventIDResult.getEventID()));
+            Person p = people.get(eventIDResult.getPersonID());
+            Event e = events.get(eventIDResult.getEventID());
+            e.setFirstName(p.getFirstName());
+            e.setLastName(p.getLastName());
+            e.setGender(p.getGender());
+            e.setPerson(p);
         }
     }
 }

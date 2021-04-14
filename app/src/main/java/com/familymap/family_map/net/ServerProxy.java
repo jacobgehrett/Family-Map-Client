@@ -33,7 +33,8 @@ public class ServerProxy {
         String jsonStr = EncoDecode.serialize(r);
         String respData = sendRequest("POST", true, jsonStr, "/user/login", null);
         if (respData == null || respData.contains("ERROR")) {
-            return new Person(null, null, "Error, login failed!");
+            return new Person(null, null, "Error, login failed!",
+                    null, null, null, null, null);
         }
         UserResult uR = (UserResult) EncoDecode.deserialize(respData, UserResult.class);
         String authtoken = uR.getAuthtoken();
@@ -43,7 +44,7 @@ public class ServerProxy {
         respData = sendRequest("GET", false, jsonStr, "/person/" + personID, authtoken);
         PersonIDResult userPID = (PersonIDResult) EncoDecode.deserialize(respData, PersonIDResult.class);
         Person user = new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
-                + " logged in!");
+                + " logged in!", userPID.getGender(), userPID.getPersonID(), userPID.getMotherID(), userPID.getFatherID(), userPID.getFatherID());
         if (user.getFirstName() != null) {
             DataCache.clear();
             DataCache.setUser(user);
@@ -78,7 +79,8 @@ public class ServerProxy {
         String jsonStr = EncoDecode.serialize(r);
         String respData = sendRequest("POST", true, jsonStr,"/user/register", null);
         if (respData == null || respData.contains("ERROR")) {
-            return new Person(null, null, "Error, register failed!");
+            return new Person(null, null, "Error, register failed!",
+                    null, null, null, null, null);
         }
         UserResult uR = (UserResult) EncoDecode.deserialize(respData, UserResult.class);
         String authtoken = uR.getAuthtoken();
@@ -88,7 +90,7 @@ public class ServerProxy {
         respData = sendRequest("GET", false, jsonStr, "/person/" + personID, authtoken);
         PersonIDResult userPID = (PersonIDResult) EncoDecode.deserialize(respData, PersonIDResult.class);
         Person user = new Person(userPID.getFirstName(), userPID.getLastName(), userPID.getFirstName() + " " + userPID.getLastName()
-                + " registered!");
+                + " registered!", userPID.getGender(), userPID.getPersonID(), userPID.getMotherID(), userPID.getFatherID(), userPID.getSpouseID());
         if (user.getFirstName() != null) {
             DataCache.clear();
             DataCache.setUser(user);

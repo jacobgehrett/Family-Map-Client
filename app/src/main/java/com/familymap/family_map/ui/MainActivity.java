@@ -1,6 +1,7 @@
 package com.familymap.family_map.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,10 +31,10 @@ public class MainActivity extends AppCompatActivity /*implements LoginFragment.L
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        invalidateOptionsMenu();
         super.onCreate(savedInstanceState);
+        invalidateOptionsMenu();
         setContentView(R.layout.activity_main);
-
+        Iconify.with(new FontAwesomeModule());
         if (fragment == null) {
             if (DataCache.hasUser()) {
                 fragment = new MapFragment();
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity /*implements LoginFragment.L
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         if (DataCache.hasUser()) {
-            new MenuInflater(this).inflate(R.menu.fragment_map_menu, menu);
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.fragment_map_menu, menu);
         }
         return true;
     }
@@ -71,9 +72,12 @@ public class MainActivity extends AppCompatActivity /*implements LoginFragment.L
         switch (item.getItemId()) {
             case R.id.settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
                 return true;
             case R.id.search:
-                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+                Intent j = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(j);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

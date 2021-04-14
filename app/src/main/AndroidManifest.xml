@@ -37,6 +37,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:usesCleartextTraffic="true"
             tools:targetApi="m">
             <intent-filter>
@@ -45,6 +46,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.PersonActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.SearchActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.EventActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.SettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ui.MainActivity"/>
     </application>
 
 </manifest>
