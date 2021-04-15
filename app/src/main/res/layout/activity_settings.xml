@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -28,14 +29,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/life_story"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -67,14 +69,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/family_tree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -106,14 +109,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/spouse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -145,14 +149,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/father_side"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -184,14 +189,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/mother_side"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -223,14 +229,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/male_events"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -262,14 +269,15 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
+        <Switch
             android:id="@+id/female_events"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:checked="true"/>
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </RelativeLayout>
 
@@ -289,6 +297,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/logout"

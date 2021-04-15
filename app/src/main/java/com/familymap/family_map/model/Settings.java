@@ -1,13 +1,13 @@
 package com.familymap.family_map.model;
 
 public class Settings {
-    private boolean lifeStory;
-    private boolean familyTree;
-    private boolean spouse;
-    private boolean father;
-    private boolean mother;
-    private boolean male;
-    private boolean female;
+    private boolean lifeStory = true;
+    private boolean familyTree = true;
+    private boolean spouse = true;
+    private boolean father = true;
+    private boolean mother = true;
+    private boolean male = true;
+    private boolean female = true;
 
     public boolean isLifeStory() {
         return lifeStory;

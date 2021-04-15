@@ -43,4 +43,5 @@
     <string name="female_events">Female Events</string>
     <string name="return_to_login_screen">RETURN TO LOGIN SCREEN</string>
     <string name="logout">Logout</string>
+    <string name="threepoints">threePoints</string>
 </resources>

@@ -248,12 +248,12 @@ public class DataCache {
 
     private Collection<Event> _getAllFilteredEvents() {
         ArrayList<Event> filtered = (ArrayList<Event>) getAllEvents();
-
+        ArrayList<Event> toRemove = new ArrayList<>();
         if (!this.settings.isFather()) {
             _calcPaternalAncestors();
             for (Event e : filtered) {
                 if (isPaternalAncestor(e.getPerson())) {
-                    filtered.remove(e);
+                    toRemove.add(e);
                 }
             }
         }
@@ -261,24 +261,25 @@ public class DataCache {
             _calcMaternalAncestors();
             for (Event e : filtered) {
                 if (isMaternalAncestor(e.getPerson())) {
-                    filtered.remove(e);
+                    toRemove.add(e);
                 }
             }
         }
         if (!this.settings.isMale()) {
             for (Event e : filtered) {
                 if (e.getGender().equals("m")) {
-                    filtered.remove(e);
+                    toRemove.add(e);
                 }
             }
         }
         if (!this.settings.isFemale()) {
             for (Event e : filtered) {
                 if (e.getGender().equals("f")) {
-                    filtered.remove(e);
+                    toRemove.add(e);
                 }
             }
         }
+        filtered.removeAll(toRemove);
         return filtered;
     }
 
@@ -320,38 +321,20 @@ public class DataCache {
         List<Event> personEvents = new ArrayList<>();
         for (Event e : this._getAllFilteredEvents()) {
             if (e.getPerson().getPersonId().equals(p.getPersonId())) {
-                for (Event pEvent : personEvents) {
-                    if (e.getDate() < pEvent.getDate()) {
-                        personEvents.add(personEvents.indexOf(pEvent), e);
-                        break;
-                    }
-                    if (e.getDate() == pEvent.getDate()) {
-                        if (e.getType().length() < pEvent.getType().length()) {
-                            for (int i = 0; i < e.getType().length(); ++i) {
-                                if (e.getType().toLowerCase().charAt(i) <
-                                        pEvent.getType().toLowerCase().charAt(i)) {
-                                    personEvents.add(personEvents.indexOf(pEvent), e);
-                                    break;
-                                }
-                            }
-                        }
-                        else {
-                            for (int i = 0; i < pEvent.getType().length(); ++i) {
-                                if (e.getType().toLowerCase().charAt(i) <
-                                        pEvent.getType().toLowerCase().charAt(i)) {
-                                    personEvents.add(personEvents.indexOf(pEvent), e);
-                                    break;
-                                }
-                            }
-                        }
-                        if (!personEvents.contains(e)) {
-                            personEvents.add(e);
-                        }
-                        break;
-                    }
-                }
                 if (personEvents.size() == 0) {
                     personEvents.add(e);
+                }
+                else {
+                    for (int i = 0; i < personEvents.size(); ++i) {
+                        if (personEvents.get(i).getDate() > e.getDate()) {
+                            personEvents.add(i, e);
+                            break;
+                        }
+                        else if (i == (personEvents.size() - 1)) {
+                            personEvents.add(e);
+                            break;
+                        }
+                    }
                 }
             }
         }

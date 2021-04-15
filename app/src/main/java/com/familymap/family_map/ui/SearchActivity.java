@@ -57,6 +57,7 @@ public class SearchActivity extends AppCompatActivity {
         SearchAdapter adapter = new SearchAdapter(people, events);
 
         SearchView searchView = findViewById(R.id.SearchView);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

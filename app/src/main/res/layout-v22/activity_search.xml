@@ -7,12 +7,25 @@
     android:orientation="vertical"
     android:id="@+id/searchLayout">
 
-    <SearchView
-        app:searchHintIcon="@null"
-        android:searchIcon="@null"
-        android:id="@+id/SearchView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_search_24"
+            android:contentDescription="@string/threepoints" />
+
+        <SearchView
+            android:searchHintIcon="@null"
+            android:searchIcon="@null"
+            android:id="@+id/SearchView"
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

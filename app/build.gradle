@@ -42,5 +42,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.joanzapata.iconify:android-iconify:2.2.2'
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
 
 }
