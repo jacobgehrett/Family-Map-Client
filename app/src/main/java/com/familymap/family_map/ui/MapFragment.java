@@ -222,7 +222,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
     int drawWidth;
     private void drawFamilyLines(Person p, double latitude, double longitude) {
-        drawWidth = drawWidth - 2;
+        drawWidth = drawWidth - 4;
         if ((p.getFather() != null) && (DataCache.getPersonEvents(p.getFather()).size() > 0)) {
             Polyline line = map.addPolyline(new PolylineOptions()
                     .add(new LatLng(latitude, longitude), new LatLng(DataCache.getPersonEvents(p.getFather()).get(0).getLatitude(),
@@ -241,7 +241,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             lines.add(line);
             drawFamilyLines(p.getMother(), DataCache.getPersonEvents(p.getMother()).get(0).getLatitude(), DataCache.getPersonEvents(p.getMother()).get(0).getLongitude());
         }
-        drawWidth = drawWidth + 2;
+        drawWidth = drawWidth + 4;
     }
 
     private void addLines(Event selectedEvent) {
@@ -268,7 +268,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     lines.add(line);
                 }
                 if (DataCache.getSettings().isFamilyTree() && DataCache.getPersonEvents(eventPerson).contains(selectedEvent)) {
-                    drawWidth = 10;
+                    drawWidth = 15;
                     drawFamilyLines(eventPerson, myLatitude, myLongitude);
                 }
                 if (DataCache.getSettings().isLifeStory()) {

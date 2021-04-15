@@ -1,6 +1,7 @@
 package com.familymap.family_map.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -99,8 +100,11 @@ public class SettingsActivity extends AppCompatActivity {
         logoutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                ProcessPhoenix.triggerRebirth(getApplicationContext(), nextIntent);
+                DataCache.setUser(null);
+                DataCache.clear();
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intent);
+                finishAffinity();
             }
         });
     }
