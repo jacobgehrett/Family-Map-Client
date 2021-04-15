@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import RequestResult.EventIDResult;
 import RequestResult.EventResult;
 import RequestResult.LoginRequest;
@@ -22,8 +21,7 @@ import RequestResult.UserResult;
 
 /*
 	The Client class shows how to call a web API operation from
-	a Java program.  This is typical of how your Android client
-	app will call the web API operations of your server.
+	a Java program.
 */
 public class ServerProxy {
     public static String serverHost;
@@ -118,8 +116,6 @@ public class ServerProxy {
         return user;
     }
 
-    // The claimRoute method calls the server's "/routes/claim" operation to
-    // claim the route between Atlanta and Miami
     private static String sendRequest(String reqMethod, boolean doOut, String jsonStr, String extension, String authtoken) {
 
         // This method shows how to send a POST request to a server

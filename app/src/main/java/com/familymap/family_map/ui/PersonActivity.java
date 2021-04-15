@@ -2,44 +2,32 @@ package com.familymap.family_map.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
 import com.familymap.family_map.model.Event;
 import com.familymap.family_map.model.Person;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonActivity extends AppCompatActivity /*implements LoginFragment.Listener*/ {
+public class PersonActivity extends AppCompatActivity {
 
     public static final String EXTRA_PERSON_ID = "extraPersonID";
-    private String personID;
-    private TextView first_name_;
-    private TextView last_name_;
-    private TextView gender_;
 
     Drawable genderIcon;
     Drawable femaleIcon;
@@ -56,13 +44,13 @@ public class PersonActivity extends AppCompatActivity /*implements LoginFragment
                 colorRes(R.color.blue).sizeDp(40);
         femaleIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female).
                 colorRes(R.color.pink).sizeDp(40);
-        personID = getIntent().getStringExtra(EXTRA_PERSON_ID);
+        String personID = getIntent().getStringExtra(EXTRA_PERSON_ID);
 
         Person p = DataCache.getPersonById(personID);
 
-        first_name_ = (TextView)findViewById(R.id.setFirstName);
-        last_name_ = (TextView)findViewById(R.id.setLastName);
-        gender_ = (TextView)findViewById(R.id.setGender);
+        TextView first_name_ = findViewById(R.id.setFirstName);
+        TextView last_name_ = findViewById(R.id.setLastName);
+        TextView gender_ = findViewById(R.id.setGender);
 
         first_name_.setText(p.getFirstName());
         last_name_.setText(p.getLastName());
@@ -215,14 +203,11 @@ public class PersonActivity extends AppCompatActivity /*implements LoginFragment
             person.setText(events.get(childPosition).getFirstName() + " " +
                     events.get(childPosition).getLastName());
 
-            eventItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(PersonActivity.this, EventActivity.class);
-                    intent.putExtra(EventActivity.EXTRA_EVENT_ID, events.get(childPosition).getEventID());
+            eventItemView.setOnClickListener(v -> {
+                Intent intent = new Intent(PersonActivity.this, EventActivity.class);
+                intent.putExtra(EventActivity.EXTRA_EVENT_ID, events.get(childPosition).getEventID());
 
-                    startActivity(intent);
-                }
+                startActivity(intent);
             });
         }
 
@@ -243,14 +228,11 @@ public class PersonActivity extends AppCompatActivity /*implements LoginFragment
             TextView relationship = personItemView.findViewById(R.id.relationship);
             relationship.setText(people.get(childPosition).getRelation());
 
-            personItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(PersonActivity.this, PersonActivity.class);
-                    intent.putExtra(PersonActivity.EXTRA_PERSON_ID, people.get(childPosition).getPersonId());
+            personItemView.setOnClickListener(v -> {
+                Intent intent = new Intent(PersonActivity.this, PersonActivity.class);
+                intent.putExtra(PersonActivity.EXTRA_PERSON_ID, people.get(childPosition).getPersonId());
 
-                    startActivity(intent);
-                }
+                startActivity(intent);
             });
         }
 

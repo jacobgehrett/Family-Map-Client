@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
 import com.familymap.family_map.model.Event;
@@ -28,8 +31,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +38,8 @@ import java.util.Map;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
-    private static String ARG_EVENT_ID = "event-id";
-    private static String ARG_CAMERA_POS = "camera-pos";
+    private static final String ARG_EVENT_ID = "event-id";
+    private static final String ARG_CAMERA_POS = "camera-pos";
     private ImageView genderImageView;
     private TextView personNameTextView;
     private TextView eventDetailsTextView;
@@ -49,11 +50,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Drawable maleIcon;
     private Drawable femaleIcon;
     private boolean firstTime = true;
-
-    public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        return fragment;
-    }
 
     public static MapFragment newInstance(String eventID) {
         MapFragment fragment = new MapFragment();
@@ -85,19 +81,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, parent, savedInstanceState);
-        //System.out.println("here");
+
         View v = inflater.inflate(R.layout.fragment_map, parent, false);
         if (selectedEvent != null) {
             addLines(selectedEvent);
         }
-        genderImageView = (ImageView)v.findViewById(R.id.genderImageView);
+        genderImageView = v.findViewById(R.id.genderImageView);
         genderImageView.setOnClickListener(setEventInfoClickListener);
-        setGenderIcon(null);
+        setGenderIcon();
 
-        personNameTextView = (TextView)v.findViewById(R.id.personNameTextView);
+        personNameTextView = v.findViewById(R.id.personNameTextView);
         personNameTextView.setOnClickListener(setEventInfoClickListener);
 
-        eventDetailsTextView = (TextView)v.findViewById(R.id.eventDetailsTextView);
+        eventDetailsTextView = v.findViewById(R.id.eventDetailsTextView);
         eventDetailsTextView.setOnClickListener(setEventInfoClickListener);
 
         markersToEvents = new HashMap<>();
@@ -125,30 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(
-                /*(googleMap) -> {
-                    map = googleMap;
-                    //map.setMapType(Utils.toGoogleMapType(DataCache.getSettings().getMapType()));
-                    map.setOnMarkerClickListener(markerClickListener);
-
-                    populateMap(true); // boolean createEvents
-
-                    if (savedInstanceState == null) {
-                        if (selectedEvent != null) {
-                            LatLng eventPosition = new LatLng(selectedEvent.getLatitude(),
-                                    selectedEvent.getLongitude());
-                            map.moveCamera(CameraUpdateFactory.newLatLng(eventPosition));
-                        }
-                    } else {
-                        if (savedInstanceState.containsKey(ARG_CAMERA_POS)) {
-                            CameraPosition cameraPosition =
-                                    savedInstanceState.getParcelable(ARG_CAMERA_POS);
-                            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                        }
-                    }
-
-                }*/this);
+        mapFragment.getMapAsync(this);
 
         Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_map_marker).
                 colorRes(R.color.teal_200).sizeDp(40);
@@ -161,29 +134,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         return v;
     }
 
-    private void populateMap(boolean createEvents) {
+    private void populateMap() {
     }
 
-    private void setGenderIcon(Object o) {
+    private void setGenderIcon() {
     }
 
-    /*public void onSettingsChanges(settingsResult result) {
-        if (result.isEventChanges()) {
-            selectedEvent = null;
-            populateMap(true);
-        }
-        else if (result.isLineChanges()) {
-            populateMap(false);
-        }
-    }*/
-
-    private GoogleMap.OnMarkerClickListener markerClickListener =
+    private final GoogleMap.OnMarkerClickListener markerClickListener =
             new GoogleMap.OnMarkerClickListener() {
         @SuppressLint("SetTextI18n")
         @Override
         public boolean onMarkerClick(Marker marker) {
             selectedEvent = markersToEvents.get(marker);
-            populateMap(false);
+            populateMap();
             Event e = (Event)marker.getTag();
             selectedEvent = e;
             if (selectedEvent != null) {
@@ -206,7 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     };
 
-    private View.OnClickListener setEventInfoClickListener = (v) -> {
+    private final View.OnClickListener setEventInfoClickListener = (v) -> {
         if (selectedEvent != null) {
             Person person = selectedEvent.getPerson();
             Intent intent = new Intent(getActivity(), PersonActivity.class);
@@ -317,7 +280,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             eventDetailsTextView.setText(selectedEvent.getType().toUpperCase() + ": " + selectedEvent.getCity() + ", " +
                     selectedEvent.getCountry() + " (" + selectedEvent.getDate() + ")");
         }
-        //map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+
         firstTime = false;
         if (selectedEvent != null) {
             addLines(selectedEvent);

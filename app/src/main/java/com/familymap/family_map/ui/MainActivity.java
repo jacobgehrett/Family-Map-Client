@@ -2,7 +2,6 @@ package com.familymap.family_map.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,17 +16,17 @@ import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 public class MainActivity extends AppCompatActivity /*implements LoginFragment.Listener*/ {
-    private static int REQ_CODE_SETTINGS = 0;
 
     private MenuItem searchMenuItem;
     private MenuItem settingsMenuItem;
 
     FragmentManager fm = getSupportFragmentManager();
     Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
+
+    public MainActivity() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

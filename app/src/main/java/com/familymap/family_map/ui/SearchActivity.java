@@ -1,10 +1,5 @@
 package com.familymap.family_map.ui;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,7 +11,12 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
 import com.familymap.family_map.model.Event;
@@ -25,6 +25,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,9 +77,9 @@ public class SearchActivity extends AppCompatActivity {
 
     private class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> implements Filterable {
         private final List<Person> people;
-        private List<Person> peopleFull;
+        private final List<Person> peopleFull;
         private final List<Event> events;
-        private List<Event> eventsFull;
+        private final List<Event> eventsFull;
 
         SearchAdapter(List<Person> people, List<Event> events) {
             this.people = people;
@@ -125,7 +126,7 @@ public class SearchActivity extends AppCompatActivity {
             return filter;
         }
 
-        private Filter filter = new Filter() {
+        private final Filter filter = new Filter() {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
@@ -133,8 +134,7 @@ public class SearchActivity extends AppCompatActivity {
                 List<Object> eventsFilteredList = new ArrayList<>();
 
                 if (constraint == null || constraint.length() == 0) {
-                    //peopleFilteredList.addAll(peopleFull);
-                    //eventsFilteredList.addAll(eventsFull);
+
                 }
                 else {
                     String filterPattern = constraint.toString().toLowerCase().trim();
@@ -164,7 +164,7 @@ public class SearchActivity extends AppCompatActivity {
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 people.clear();
                 events.clear();
-                List<Object> PE = (List)results.values;
+                List PE = (List)results.values;
                 for (Object item : PE) {
                     if (item instanceof Person) {
                         people.add((Person)item);

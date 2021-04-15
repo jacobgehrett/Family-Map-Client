@@ -1,7 +1,7 @@
 package com.familymap.family_map.model;
 
 public class MapColor {
-    private float color;
+    private final float color;
 
     public MapColor(float color) {
         this.color = color;

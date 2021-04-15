@@ -1,19 +1,15 @@
 package com.familymap.family_map.ui;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
-import com.familymap.family_map.model.Person;
-import com.jakewharton.processphoenix.ProcessPhoenix;
 
 @SuppressLint("UseSwitchCompatOrMaterialCode")
 public class SettingsActivity extends AppCompatActivity {
@@ -48,64 +44,26 @@ public class SettingsActivity extends AppCompatActivity {
         maleEventsSwitch.setChecked(DataCache.getSettings().isMale());
         femaleEventsSwitch.setChecked(DataCache.getSettings().isFemale());
 
-        lifeStorySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setLifeStory(isChecked);
-            }
-        });
+        lifeStorySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setLifeStory(isChecked));
 
-        familyTreeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setFamilyTree(isChecked);
-            }
-        });
+        familyTreeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setFamilyTree(isChecked));
 
-        spouseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setSpouse(isChecked);
-            }
-        });
+        spouseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setSpouse(isChecked));
 
-        fatherSideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setFather(isChecked);
-            }
-        });
+        fatherSideSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setFather(isChecked));
 
-        motherSideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setMother(isChecked);
-            }
-        });
+        motherSideSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setMother(isChecked));
 
-        maleEventsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setMale(isChecked);
-            }
-        });
+        maleEventsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setMale(isChecked));
 
-        femaleEventsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DataCache.getSettings().setFemale(isChecked);
-            }
-        });
+        femaleEventsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> DataCache.getSettings().setFemale(isChecked));
 
-        logoutView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataCache.setUser(null);
-                DataCache.clear();
-                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intent);
-                finishAffinity();
-            }
+        logoutView.setOnClickListener(v -> {
+            DataCache.setUser(null);
+            DataCache.clear();
+            Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+            startActivity(intent);
+            finishAffinity();
         });
     }
 }

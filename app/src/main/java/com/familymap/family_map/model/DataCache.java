@@ -1,12 +1,16 @@
 package com.familymap.family_map.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import RequestResult.EventIDResult;
-import RequestResult.EventResult;
-import RequestResult.PersonResult;
 import RequestResult.PersonIDResult;
-import RequestResult.Result;
 
 public class DataCache {
 
@@ -24,17 +28,11 @@ public class DataCache {
 
     public static void setUser(Person p) { instance._setUser(p); }
 
-    public static Person getUser(String username) { return instance._getUser(username); }
-
     public static boolean hasUser() { return instance._hasUser(); }
-
-    public static void addPerson(Person p) { instance._addPerson(p); }
 
     public static Collection<Person> getAllPeople() { return instance._getAllPeople(); }
 
     public static Person getPersonById(String id) { return instance._getPersonById(id); }
-
-    public static void addEvent(Event e) { instance._addEvent(e); }
 
     public static Collection<Event> getAllEvents() { return instance._getAllEvents(); }
 
@@ -43,8 +41,6 @@ public class DataCache {
     }
 
     public static Event getEventById(String id) { return instance._getEventById(id); }
-
-    public static List<String> getEventTypes() { return instance._getEventTypes(); }
 
     public static Map<String, MapColor> getEventTypeColors() {
         return instance._getEventTypeColors();
@@ -60,15 +56,7 @@ public class DataCache {
 
     public static Settings getSettings() { return instance._getSettings(); }
 
-    public static void setSettings(boolean lifeStory, boolean familyTree, boolean spouse, boolean father, boolean mother, boolean male, boolean female) {
-        instance._setSettings(lifeStory, familyTree, spouse, father, mother, male, female);
-    }
-
     public static List<Event> getPersonEvents(Person p) { return instance._getPersonEvents(p); }
-
-    public static List<Event> getPersonFilteredEvents(Person p) {
-        return instance._getPersonFilteredEvents(p);
-    }
 
     public static List<Person> getPersonChildren(Person p) {
         return instance._getPersonChildren(p);
@@ -77,20 +65,21 @@ public class DataCache {
     public static void setPeople(PersonIDResult[] r) {
         instance._setPeople(r);
     }
+
     public static void setEvents(EventIDResult[] r) {
         instance._setEvents(r);
     }
 
-    private Map<String, Person> people;
-    private Map<String, Event> events;
-    private Map<String, List<Event>> personEvents;
-    private Settings settings;
-    private List<String> eventTypes;
-    private Map<String, MapColor> eventTypeColors;
+    private final Map<String, Person> people;
+    private final Map<String, Event> events;
+    private final Map<String, List<Event>> personEvents;
+    private final Settings settings;
+    private final List<String> eventTypes;
+    private final Map<String, MapColor> eventTypeColors;
     private Person user;
-    private Set<String> paternalAncestors;
-    private Set<String> maternalAncestors;
-    private Map<String, List<Person>> personChildren;
+    private final Set<String> paternalAncestors;
+    private final Set<String> maternalAncestors;
+    private final Map<String, List<Person>> personChildren;
 
     private DataCache() {
         people = new HashMap<>();
@@ -121,7 +110,6 @@ public class DataCache {
         _calcPersonEvents();
         _calcEventTypes();
         _calcEventTypeColors();
-        //_calcUser();
         _calcPaternalAncestors();
         _calcMaternalAncestors();
         _calcPersonChildren();
@@ -129,11 +117,7 @@ public class DataCache {
 
     private void _setUser(Person p) { this.user = p; }
 
-    private Person _getUser(String username) { return user; }
-
     private boolean _hasUser() { return (user != null); }
-
-    private void _addPerson(Person p) { people.put(p.getPersonId(), p); }
 
     private void _calcPersonEvents() {
         personEvents.clear();
@@ -141,7 +125,7 @@ public class DataCache {
         for (Event event : events.values()) {
             String personId = event.getPersonId();
 
-            List<Event> eventList = null;
+            List<Event> eventList;
             if (personEvents.containsKey(personId)) {
                 eventList = personEvents.get(personId);
             }
@@ -153,9 +137,7 @@ public class DataCache {
             eventList.add(event);
         }
 
-        for (List<Event> eventList : personEvents.values()) {
-            //Collections.sort(eventList);
-        }
+        personEvents.values();
     }
 
     private void _calcEventTypes() {
@@ -178,32 +160,6 @@ public class DataCache {
             colorIndex = ((colorIndex + 1) % colors.length);
         }
     }
-
-    /*private void _calcUser() {
-        Set<String> ancestors = new HashSet<>();
-        for (Person p : people.values()) {
-            if (p.hasFatherId()) {
-                ancestors.add(p.getFatherId());
-            }
-            if (p.hasMotherId()) {
-                ancestors.add(p.getMotherId());
-            }
-        }
-
-        Set<String> tmp = new HashSet<>(people.keySet());
-        tmp.removeAll(ancestors);
-        for (String personId : tmp) {
-            Person p = _getPersonById(personID);
-            if (p.hasFatherId() || p.hasMotherId()) {
-                this.user = p;
-                break;
-            }
-        }
-
-        if (this.user == null) {
-            throw new illegalStateException("User could not be determined");
-        }
-    }*/
 
     private void _calcPaternalAncestors() {
         paternalAncestors.clear();
@@ -237,9 +193,6 @@ public class DataCache {
 
     private Person _getPersonById(String id) {
         return people.get(id);
-    }
-
-    private void _addEvent(Event e) {
     }
 
     private Collection<Event> _getAllEvents() {
@@ -287,10 +240,6 @@ public class DataCache {
         return events.get(id);
     }
 
-    private List<String> _getEventTypes() {
-        return null;
-    }
-
     private Map<String, MapColor> _getEventTypeColors() {
         return eventTypeColors;
     }
@@ -301,16 +250,6 @@ public class DataCache {
 
     private boolean _isMaternalAncestor(Person p) {
         return maternalAncestors.contains(p.getPersonId());
-    }
-
-    private void _setSettings(boolean lifeStory, boolean familyTree, boolean spouse, boolean father, boolean mother, boolean male, boolean female) {
-        this.settings.setLifeStory(lifeStory);
-        this.settings.setFamilyTree(familyTree);
-        this.settings.setSpouse(spouse);
-        this.settings.setFather(father);
-        this.settings.setMother(mother);
-        this.settings.setMale(male);
-        this.settings.setFemale(female);
     }
 
     private Settings _getSettings() {
@@ -339,10 +278,6 @@ public class DataCache {
             }
         }
         return personEvents;
-    }
-
-    private List<Event> _getPersonFilteredEvents(Person p) {
-        return null;
     }
 
     private List<Person> _getPersonChildren(Person p) {

@@ -1,17 +1,17 @@
 package com.familymap.family_map.model;
 
 public class Event {
-    private String type;
-    private double latitude;
-    private double longitude;
+    private final String type;
+    private final double latitude;
+    private final double longitude;
     private String gender;
     private String firstName;
     private String lastName;
-    private int date;
+    private final int date;
     private Person person;
-    private String city;
-    private String country;
-    private String eventID;
+    private final String city;
+    private final String country;
+    private final String eventID;
 
     public Event(String type, float latitude, float longitude, int date, String city,
                  String country, String eventID) {

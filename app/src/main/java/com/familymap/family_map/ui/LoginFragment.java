@@ -14,13 +14,16 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+
 import com.familymap.family_map.R;
 import com.familymap.family_map.model.DataCache;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import RequestResult.LoginRequest;
 import RequestResult.RegisterRequest;
 
@@ -55,22 +58,18 @@ public class LoginFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_login, parent, false);
 
         RadioGroup rg = v.findViewById(R.id.radio);
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup rg, int checkedId) {
-                RadioButton rb = v.findViewById(checkedId);
-                // Check which radio button was clicked
-                if (checkedId == R.id.radio_male) {
-                    gender = "m";
-                }
-                else if (checkedId == R.id.radio_female) {
-                    gender = "f";
-                }
-                v.findViewById(R.id.register).setEnabled(serverHostEditText != null && serverPortEditText != null && usernameEditText
-                        != null && passwordEditText.length() > 0 && firstNameEditText != null && lastNameEditText
-                        != null && emailEditText != null && gender != null);
+        rg.setOnCheckedChangeListener((rg1, checkedId) -> {
+            RadioButton rb = v.findViewById(checkedId);
+            // Check which radio button was clicked
+            if (checkedId == R.id.radio_male) {
+                gender = "m";
             }
+            else if (checkedId == R.id.radio_female) {
+                gender = "f";
+            }
+            v.findViewById(R.id.register).setEnabled(serverHostEditText != null && serverPortEditText != null && usernameEditText
+                    != null && passwordEditText.length() > 0 && firstNameEditText != null && lastNameEditText
+                    != null && emailEditText != null && gender != null);
         });
 
         TextWatcher text = new TextWatcher() {
@@ -131,67 +130,61 @@ public class LoginFragment extends Fragment {
 
         Button loginButton = v.findViewById(R.id.login);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        loginButton.setOnClickListener(v1 -> {
 
-                // Set up a handler that will process messages from the task and make updates on the UI thread
-                @SuppressLint("HandlerLeak")
-                Handler uiThreadMessageHandler = new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(@NonNull Message msg) {
-                        Bundle bundle = msg.getData();
-                        String finalMessage = bundle.getString(USER_RESULT);
-                        if (DataCache.hasUser()) {
-                            ((MainActivity)getActivity()).loggedIn();
-                        }
-                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
-                        return false;
+            // Set up a handler that will process messages from the task and make updates on the UI thread
+            @SuppressLint("HandlerLeak")
+            Handler uiThreadMessageHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(@NonNull Message msg) {
+                    Bundle bundle = msg.getData();
+                    String finalMessage = bundle.getString(USER_RESULT);
+                    if (DataCache.hasUser()) {
+                        ((MainActivity)getActivity()).loggedIn();
                     }
-                });
+                    Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
 
 
 
-                LoginRequest lR = new LoginRequest(usernameEditText, passwordEditText);
+            LoginRequest lR = new LoginRequest(usernameEditText, passwordEditText);
 
-                // Create and execute the task on a separate thread
-                LoginAsyncTask task = new LoginAsyncTask(uiThreadMessageHandler, lR,
-                        serverHostEditText, serverPortEditText);
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.submit(task);
-            }
+            // Create and execute the task on a separate thread
+            LoginAsyncTask task = new LoginAsyncTask(uiThreadMessageHandler, lR,
+                    serverHostEditText, serverPortEditText);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(task);
         });
 
         Button registerButton = v.findViewById(R.id.register);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        registerButton.setOnClickListener(v12 -> {
 
-                // Set up a handler that will process messages from the task and make updates on the UI thread
-                @SuppressLint("HandlerLeak")
-                Handler uiThreadMessageHandler = new Handler(new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(@NonNull Message msg) {
-                        Bundle bundle = msg.getData();
-                        String finalMessage = bundle.getString(USER_RESULT);
-                        if (DataCache.hasUser()) {
-                            ((MainActivity)getActivity()).loggedIn();
-                        }
-                        Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
-                        return false;
+            // Set up a handler that will process messages from the task and make updates on the UI thread
+            @SuppressLint("HandlerLeak")
+            Handler uiThreadMessageHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(@NonNull Message msg) {
+                    Bundle bundle = msg.getData();
+                    String finalMessage = bundle.getString(USER_RESULT);
+                    if (DataCache.hasUser()) {
+                        ((MainActivity)getActivity()).loggedIn();
                     }
-                });
+                    Toast.makeText(getActivity(), finalMessage, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
 
-                RegisterRequest rR = new RegisterRequest(usernameEditText, passwordEditText,
-                        emailEditText, firstNameEditText, lastNameEditText, gender, null);
+            RegisterRequest rR = new RegisterRequest(usernameEditText, passwordEditText,
+                    emailEditText, firstNameEditText, lastNameEditText, gender, null);
 
-                // Create and execute the task on a separate thread
-                RegisterAsyncTask task = new RegisterAsyncTask(uiThreadMessageHandler, rR,
-                        serverHostEditText, serverPortEditText);
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.submit(task);
-            }
+            // Create and execute the task on a separate thread
+            RegisterAsyncTask task = new RegisterAsyncTask(uiThreadMessageHandler, rR,
+                    serverHostEditText, serverPortEditText);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(task);
         });
 
         return v;
